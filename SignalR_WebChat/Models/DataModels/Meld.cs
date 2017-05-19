@@ -44,17 +44,128 @@ namespace SignalR_WebChat.Models.DataModels
         }
 
         public int Score { get; set; }
-        public List<Card> NonTrumpAces
+        public List<Card> TrumpKings
         {
             get
             {
-                var nonTrumpAces = HandInQuestion.NonTrumpCards.Where(c => c.IsAce()).ToList();
-                if (nonTrumpAces != null)
-                    return nonTrumpAces;
+                var trumpKings = HandInQuestion.TrumpCards.Where(c => c.IsKing()).ToList();
+                if (trumpKings != null)
+                    return trumpKings;
                 else
                     return new List<Card>();
             }
         }
+        public List<Card> TrumpQueens
+        {
+            get
+            {
+                var trumpQueens = HandInQuestion.TrumpCards.Where(c => c.IsQueen()).ToList();
+                if (trumpQueens != null)
+                    return trumpQueens;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Aces
+        {
+            get
+            {
+                var aces = HandInQuestion.Cards.Where(c => c.IsAce()).ToList();
+                if (aces != null)
+                    return aces;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Kings
+        {
+            get
+            {
+                var kings = HandInQuestion.Cards.Where(c => c.IsKing()).ToList();
+                if (kings != null)
+                    return kings;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Queens
+        {
+            get
+            {
+                var queens = HandInQuestion.Cards.Where(c => c.IsQueen()).ToList();
+                if (queens != null)
+                    return queens;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Jacks
+        {
+            get
+            {
+                var jacks = HandInQuestion.Cards.Where(c => c.IsJack()).ToList();
+                if (jacks != null)
+                    return jacks;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Tens
+        {
+            get
+            {
+                var tens = HandInQuestion.Cards.Where(c => c.IsTen()).ToList();
+                if (tens != null)
+                    return tens;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Clubs
+        {
+            get
+            {
+                var clubs = HandInQuestion.Cards.Where(c => c.Suit.Name == "clubs").ToList();
+                if (clubs != null)
+                    return clubs;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Diamonds
+        {
+            get
+            {
+                var diamonds = HandInQuestion.Cards.Where(c => c.Suit.Name == "diamonds").ToList();
+                if (diamonds != null)
+                    return diamonds;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Hearts
+        {
+            get
+            {
+                var hearts = HandInQuestion.Cards.Where(c => c.Suit.Name == "hearts").ToList();
+                if (hearts != null)
+                    return hearts;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> Spades
+        {
+            get
+            {
+                var spades = HandInQuestion.Cards.Where(c => c.Suit.Name == "spades").ToList();
+                if (spades != null)
+                    return spades;
+                else
+                    return new List<Card>();
+            }
+        }
+
         public List<Card> NonTrumpKings
         {
             get
@@ -212,28 +323,26 @@ namespace SignalR_WebChat.Models.DataModels
 
         public int RoyalMarriages() //Royal Marriage: King and Queen of trumps
         {
-            var h = HandInQuestion;
-            var tc = h.TrumpCards;
             var royalMarriages = 0;
 
-            var kings = tc.Count(c => c.IsKing());
-            var queens = tc.Count(c => c.IsQueen());
+            var trumpKings = TrumpKings.Count;
+            var trumpQueens = TrumpQueens.Count;
 
             var runs = Runs();
 
-            if (kings > runs && queens > runs)
+            if (trumpKings > runs && trumpQueens > runs)
             {
-                if (kings > queens)
+                if (trumpKings > trumpQueens)
                 {
-                    royalMarriages = queens - runs;
+                    royalMarriages = trumpQueens - runs;
                 }
-                else if (queens > kings)
+                else if (trumpQueens > trumpKings)
                 {
-                    royalMarriages = kings - runs;
+                    royalMarriages = trumpKings - runs;
                 }
                 else
                 {
-                    royalMarriages = kings - runs; //this could be either kings || queens - runs
+                    royalMarriages = trumpKings - runs; //this could be either trumpKings || trumpQueens - runs
                 }
             }
 
@@ -307,22 +416,19 @@ namespace SignalR_WebChat.Models.DataModels
         public int AcesAround() //Aces around: An Ace in each suit
         {
             var acesAround = 0;
-            var hand = this.HandInQuestion;
 
-            var aces = hand.Cards.Where(c => c.IsAce()).ToList();
+            var aces = Aces;
 
             if(aces.Count > 0)
                 acesAround = AroundHelper(aces);
            
-
             return acesAround;
         }
         public int KingsAround() //Kings around: A King in each suit
         {
             var kingsAround = 0;
-            var hand = this.HandInQuestion;
 
-            var kings = hand.Cards.Where(c => c.IsKing()).ToList();
+            var kings = Kings;
 
             if (kings.Count > 0)
                 kingsAround = AroundHelper(kings);
@@ -332,9 +438,8 @@ namespace SignalR_WebChat.Models.DataModels
         public int QueensAround() //Queens around: A Queen in each suit
         {
             var queensAround = 0;
-            var hand = this.HandInQuestion;
 
-            var queens = hand.Cards.Where(c => c.IsQueen()).ToList();
+            var queens = Queens;
 
             if (queens.Count > 0)
                 queensAround = AroundHelper(queens);
@@ -344,9 +449,8 @@ namespace SignalR_WebChat.Models.DataModels
         public int JacksAround() //Jacks around: A Jack in each suit
         {
             var jacksAround = 0;
-            var hand = this.HandInQuestion;
 
-            var jacks = hand.Cards.Where(c => c.IsJack()).ToList();
+            var jacks = Jacks;
 
             if (jacks.Count > 0)
                 jacksAround = AroundHelper(jacks);
