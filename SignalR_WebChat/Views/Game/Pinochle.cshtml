@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Pinochle";
+}
+
+<h2>Pinochle</h2>
+
+<div class="row">
+   
+</div>
+
+@section scripts{
+
+    <script src="~/Scripts/jquery.signalR-2.2.1.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/_my-scripts/play-pinochle.js"></script>
+    <script type="text/javascript">
+        //for visual representation only... this will be refactored to play-pinochle.js
+        var game;
+        (function () {
+            let canvas = document.createElement("canvas");
+            canvas.setAttribute("width", "256");
+            canvas.setAttribute("height", "256");
+            canvas.style.border = "1px dashed black";
+            document.body.appendChild(canvas);
+            let ctx = canvas.getContext("2d");
+
+            points = [32, 128, 128, 20, 224, 128];
+
+            function drawQuadCurve(moveToX, moveToY, cpX, cpY, endX, endY) {
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(moveToX, moveToY);
+                ctx.quadraticCurveTo(cpX, cpY, endX, endY);
+                ctx.stroke();
+            }
+            var i = 0;
+            let k = setInterval(function () { let j = i + 1; return j;}, 100);
+            
+                drawQuadCurve(points[0], points[1], points[2], k, points[4], points[5])
+           
+
+        })();
+        (function () {
+
+           /* $.connection.hub.logging = true;
+            $.connection.hub.start();
+
+            game = $.connection.game;
+            game.client.newMessage = onNewMessage;*/
+
+           
+
+        })();
+    </script>
+}

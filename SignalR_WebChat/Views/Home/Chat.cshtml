@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Chat";
+
+    var cards = Model.Deal(80);
+
+    string[] Image = new string[80];
+    var j = 0;
+    foreach (var card in cards)
+    {
+        
+        var cardName = $"{card.Value.ToString()}_of_{card.Suit.Name.ToString()}";
+        Image[j] = $"/Images/pinochle_cards/{cardName}.png";
+        j++;
+    }
+
+}
+<h2>Chat</h2>
+
+<label for="room">Room:</label><input type="text" id="room" />
+<input type="button" id="join" value="join" />
+
+<label for="message">Message:</label><input type="text" id="message" />
+
+<div>
+    <input type="button" id="send" value="Send message" />
+    <input type="button" id="sendprivate" value="Send message private" />
+</div>
+<div class="container">
+    <ul id="messages"></ul>
+</div>
+
+
+    @for (int i = 0; i < 80; i++)
+    {
+        <img src='@Image[i].ToString()' height="100" width="40"/>       
+    }
+
+
+
+@section scripts{
+
+    <script src="~/Scripts/jquery.signalR-2.2.1.js"></script>
+    <script src="~/Scripts/server.js"></script>
+    <script type="text/javascript">
+        
+        var chat;
+
+        $(function () {
+
+            $.connection.hub.logging = true;
+            //this is the default order and implied.  The following is explicit and verbose for learning
+            // transport: ['webSockets', 'foreverFrame', 'serverSentEvents', 'longPolling']
+            $.connection.hub.start({ transport: 'longPolling' });
+
+            chat = $.connection.chat;
+            chat.client.newMessage = onNewMessage;
+
+            $('#join').click(onJoin);
+            $('#send').click(onSend);
+            $('#sendprivate').click(onSendPrivate);
+
+        });
+
+        function onNewMessage(message) {
+            $('#messages').append('<li>' + message + '</li>');
+        };
+
+        function onJoin() {
+            chat.server.joinRoom($('#room').val());
+        };
+
+        function onSend() {
+            chat.server.sendMessage($('#message').val());
+        };
+
+        function onSendPrivate() {
+            chat.server.sendMessageToRoom($('#room').val(), $('#message').val());
+        }
+
+        $.connection.hub.error(function (err) {
+            alert("An error occured: " + err);
+        });
+
+    </script>
+
+}
+

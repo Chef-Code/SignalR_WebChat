@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<!--MAIN VIEW LAYOUT PROTOTYPE-->
+<div class="row" id="top-row">
+    <div class="col-md-4"></div><div class="col-md-4" id="top"></div><div class="col-md-4"></div>
+</div>
+<div class="row" id="middle-row">
+    <div class="col-md-4" id="left"></div><div class="col-md-4"></div><div class="col-md-4" id="right"></div>
+</div>
+<div class="row" id="bottom-row">
+    <div class="col-md-4"></div><div class="col-md-4" id="bottom"></div><div class="col-md-4"></div>
+</div>
+
+@section scripts{ 
+    <script type="text/javascript">
+
+        (function () {
+            var players = [1, 2, 3, 4];
+
+            var player = 3;
+
+            if (player == 1) {
+                $('#bottom').html("<span class='red'>Player: " + players[0] + "</span>");
+                $('#left').html("<span class='red'>Player: " + players[1] + "</span>");
+                $('#top').html("<span class='red'>Player: " + players[2] + "</span>");
+                $('#right').html("<span class='red'>Player: " + players[3] + "</span>");
+            }
+
+            if (player == 2) {
+                $('#bottom').html("<span class='red'>Player: " + players[1] + "</span>");
+                $('#left').html("<span class='red'>Player: " + players[2] + "</span>");
+                $('#top').html("<span class='red'>Player: " + players[3] + "</span>");
+                $('#right').html("<span class='red'>Player: " + players[0] + "</span>");
+            }
+
+            if (player == 3) {
+                $('#bottom').html("<span class='red'>Player: " + players[2] + "</span>");
+                $('#left').html("<span class='red'>Player: " + players[3] + "</span>");
+                $('#top').html("<span class='red'>Player: " + players[0] + "</span>");
+                $('#right').html("<span class='red'>Player: " + players[1] + "</span>");
+            }
+
+            if (player == 4) {
+                $('#bottom').html("<span class='red'>Player: " + players[3] + "</span>");
+                $('#left').html("<span class='red'>Player: " + players[0] + "</span>");
+                $('#top').html("<span class='red'>Player: " + players[1] + "</span>");
+                $('#right').html("<span class='red'>Player: " + players[2] + "</span>");
+            }
+
+        })();
+
+    </script>
+    
+}

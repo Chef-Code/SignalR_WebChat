@@ -1,0 +1,800 @@
+﻿
+@{
+    ViewBag.Title = "JoinGameTable";
+}
+
+<style>
+.list-inline li {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 6px;
+}
+.team-waiting-ul li{
+    list-style-type: none;
+    color:green;
+}
+.team-waiting-ul li:before{  
+    /*Unicode bullet symbol: http://unicode.org/charts/PDF/U2600.pdf */
+    content: '\2660';
+
+}
+.teams-online-ul li{
+    list-style-type: none;
+    color:red;
+}
+.teams-online-ul li:before{
+    /*Unicode bullet symbol: http://unicode.org/charts/PDF/U2600.pdf */
+    content: '\2660';
+}
+.left-image{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.left-image:before{
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1; 
+    background: url(/Images/backgrounds/red-poker.jpg) 0 0 no-repeat;
+
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.top-image{
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.right-image{
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+.rotate-only-background{
+    position: relative;
+    overflow: hidden;
+}
+
+.play-card{
+    border:5px inset #186427;
+    min-height: 100px;
+    
+}
+#center{
+    min-height: 300px;
+    height: 100%;
+}
+#top-right-top-row{
+    min-height:150px;
+}
+#top-right-center-row, #top-right-bottom-row {
+    background-color: whitesmoke;
+}
+.clubs-image{
+    background: url(/Images/clubs_suit.jpg) 0 0 no-repeat;
+    background-size: 100px 130px;
+    height: 134px;  
+    width: 104px;
+}
+.diamonds-image{
+    background: url(/Images/diamonds_suit.jpg) 0 0 no-repeat;
+    background-size: 100px 130px;
+    height: 134px;  
+    width: 104px;
+}
+.hearts-image{
+    background: url(/Images/hearts_suit.jpg) 0 0 no-repeat;
+    background-size: 100px 130px;
+    height: 134px;  
+    width: 104px;
+}
+.spades-image{
+        background: url(/Images/spades_suit.jpg) 0 0 no-repeat;
+    background-size: 100px 130px;
+    height: 134px;  
+    width: 104px;
+}
+#declare-trump{
+    min-width: 420px;
+}
+.padding{
+    /* top | right | bottom | left */
+    padding: 3px 2px 3px 2px;
+}
+.gold-box-shadow{
+    box-shadow: 1px 1px 41px 12px rgba(225,161,17,0.9);
+    -webkit-box-shadow: 1px 1px 41px 12px rgba(225,161,17,0.9);
+    -moz-box-shadow: 1px 1px 41px 12px rgba(225,161,17,0.9);
+}
+.green-box-shadow{
+    box-shadow: 0px 2px 67px 15px rgba(10,156,43,1);
+    -webkit-box-shadow: 0px 2px 67px 15px rgba(10,156,43,1);
+    -moz-box-shadow: 0px 2px 67px 15px rgba(10,156,43,1);
+}
+#bottom-ul li{
+    display: inline;
+}
+</style>       
+<!-- http://thewebthought.blogspot.com/2013/04/css-rotate-background-images.html -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2">
+            <div style="padding: 2px">
+                <h3 id="alias">User</h3>
+                <input type="text" id="user-alias-tb" class="form-control" />
+                <span class="help-block" id="alert">Please enter your alias and team name and click <strong>Initialize</strong> to begin play.</span>
+                <input type="text" id="team-name-tb" class="form-control" />
+
+                <div id="spin"></div>
+
+                <input type="button" id="init-team-btn" value="Initialize" class="btn btn-primary" />
+                <h3>Matches</h3>
+                <ul id="wins" class="list-inline"></ul>
+
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <h4 id="team-waiting-h4">Teams Needing A Partner</h4>
+            <ul id="team-waiting-ul" class="team-waiting-ul">
+                  
+            </ul>
+        </div>
+
+        <div class="col-lg-5">
+            <h4 id="teams-online-h4">Teams Online</h4>
+            <ul id="teams-online-ul" class="teams-online-ul"></ul>
+        </div>
+    </div>
+
+    <!--MAIN VIEW LAYOUT PROTOTYPE-->
+    <div id="board" class="container-fluid">
+        <div class="row" id="top-row">
+            <div class="col-md-4" id="left-col"></div>
+            <div class="col-md-4" id="top"></div>
+            
+            <div class="col-md-4" id="top-right">
+                <div class="row" id="top-right-top-row"></div>
+                <div class="row" id="top-right-center-row"></div>
+                <div class="row" id="top-right-bottom-row"></div>
+            </div>
+        </div>
+        <div class="row" id="middle-row">
+            <div class="col-md-4" id="left"></div>
+
+            <div class="col-md-4" id="center">
+
+                <div class="row" id="center-top-row">
+                    <div class="col-md-4"></div><div class="col-md-4" id="center-top"></div><div class="col-md-4"></div>
+                </div>
+                <div class="row" id="center-middle-row">
+                    <div class="col-md-4" id="center-left"></div>
+                    <div class="col-md-4" id="center-center"></div>
+                    <div class="col-md-4" id="center-right"></div>
+                </div>
+                <div class="row" id="center-bottom-row">
+                    <div class="col-md-4"></div><div class="col-md-4" id="center-bottom"></div><div class="col-md-4"></div>
+                </div>
+
+            </div>
+                       
+            <div class="col-md-4" id="right"></div>
+        </div>
+
+        <div class="row" id="bottom-row">
+            <div class="col-md-4" id="bottom-left">
+                <div class="row" id="bottom-left-top-row"></div>
+                <div class="row" id="bottom-left-center-row"></div>
+                <div class="row" id="bottom-left-bottom-row"></div>
+            </div>
+
+            <div class="col-md-4" id="bottom"></div><div class="col-md-4"></div>
+        </div>
+    </div>
+    
+
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/jquery.signalR-2.2.1.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/spin.js"></script>
+    <script src="~/Scripts/jquery.spin.js"></script>
+
+    <script type="text/javascript">
+        var gameHub;
+
+        $(function () {
+
+            gameHub = $.connection.gameHub;
+
+            //function scope variables
+            var userId;
+            var teamId;
+            var teamName;
+            var teamMembers;
+            var teamIsPlaying;
+            var teamsWaitingSet = new Set();
+            var newTeamsWaitingSet = new Set();
+            var alias = $('#user-alias-tb').val();
+            var teamNameTb = $('#team-name-tb').val();
+            var teamWaitingUL = $('#team-waiting-ul');
+            let topRow = $('#top-row');
+            let middleRow = $('#middle-row');
+            let bottomRow = $('#bottom-row');
+            
+            $('#user-alias-tb').val(''); //clear additional client on same server
+            $('#team-name-tb').val(''); //clear additional client on same server
+
+            var opts = {
+                lines: 13 // The number of lines to draw
+                , length: 56 // The length of each line
+                , width: 16 // The line thickness
+                , radius: 84 // The radius of the inner circle
+                , scale: 1 // Scales overall size of the spinner
+                , corners: 1 // Corner roundness (0..1)
+                , color: '#000' // #rgb or #rrggbb or array of colors
+                , opacity: 0.05 // Opacity of the lines
+                , rotate: 46 // The rotation offset
+                , direction: 1 // 1: clockwise, -1: counterclockwise
+                , speed: 1.5 // Rounds per second
+                , trail: 23 // Afterglow percentage
+                , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+                , zIndex: 2e9 // The z-index (defaults to 2000000000)
+                , className: 'spinner' // The CSS class to assign to the spinner
+                , top: '50%' // Top position relative to parent
+                , left: '50%' // Left position relative to parent
+                , shadow: false // Whether to render a shadow
+                , hwaccel: false // Whether to use hardware acceleration
+                , position: 'absolute' // Element positioning
+            }
+            var target = document.getElementById('spin')
+            var spinner = new Spinner(opts).spin(target);
+
+            $('#init-team-btn').attr('disabled', 'disabled');
+
+            $.connection.hub.logging = true;
+
+            $.connection.hub.error(function (error) {
+                console.log('SignalR error: ' + error)
+            });
+
+            $.connection.hub.start().done(function () {
+                $('#init-team-btn').removeAttr('disabled');
+                spinner.stop();
+            });
+
+            //onClick Event Handler
+
+            teamWaitingUL.on("click", "li", function (event) {
+                $(this).toggleClass('active');
+                event.preventDefault();
+                let teamId = $(event.target).attr('id');
+
+                if (teamId !== undefined) {
+
+                    gameHub.server.joinTeam($('#user-alias-tb').val(), teamId).done(function () {
+
+                        $('#user-alias-tb').attr('disabled', 'disabled');
+                        $('#team-name-tb').attr('disabled', 'disabled');
+                        $('#init-team-btn').attr('disabled', 'disabled');
+
+                        console.log("server method FindTeamByTeamId(teamId) succeeded");
+                    }).fail(function (error) {
+                        console.log("server method FindTeamByTeamId(teamId) failed" + error);
+                    })
+                }
+            });
+
+            $('#init-team-btn').on('click', function () {
+
+                gameHub.server.createNewTeam($('#user-alias-tb').val(), $('#team-name-tb').val()).done(function () {
+
+                    $('#user-alias-tb').attr('disabled', 'disabled');
+                    $('#team-name-tb').attr('disabled', 'disabled');
+                    $('#init-team-btn').attr('disabled', 'disabled');
+
+                    console.log('on click handler invocation of sever method: CreateNewTeam() succeeded');
+                }).fail(function (error) {
+                    console.log('on click handler invocation of sever method: CreateNewTeam() failed. Error: ' + error);
+                })
+            });
+
+            gameHub.client.playerJoined = playerJoined;
+
+            gameHub.client.teamWaitingList = teamWaitingList;
+
+            gameHub.client.removeTeamFromWaitingList = removeTeamFromWaitingList;
+
+            gameHub.client.updateTeamsWaitingList = function updateTeamsWaitingList(teams) {
+
+               if (teams.length > 0) {
+                    newTeamsWaitingSet.add(teams);
+
+                    let union = new Set([...teamsWaitingSet, ...newTeamsWaitingSet]);
+                    let unionArray = Array.from(union);
+
+                    for (let i = 0; i < unionArray[0].length; i++) {
+                        Object.keys(unionArray[0][i]).forEach(key => {
+                            let value = unionArray[0][i][key];
+                            console.log("key: " + key + ", value: " + value);
+                        });
+
+                        teamWaitingList(unionArray[0][i]);
+                    }
+               }
+            };
+
+            function playerJoined(user) {
+                userId = user.AppUserId;
+                console.log("userId: " + userId);
+                $('#user-alias-tb #init-team-btn').attr('disabled', 'disabled');
+            };
+
+            function teamWaitingList(team) {
+
+                 teamId = team.TeamId;
+                 teamName = team.Name;
+                 teamMembers = team.Members;
+                 teamIsPlaying = team.IsPlaying;
+
+                 $('#alert').html("At this time there is no opponent team. As soon as one joins the game will begin.");
+
+                 if (teamMembers.length == 1) {
+
+                     let teamMember1 = teamMembers[0];
+                     let member1Alias = teamMember1.Alias;
+
+                     $('#team-waiting-ul').append("<li id='" + teamId + "'><span id='" + teamName + "'> <strong>Team Name:</strong> " + teamName + "</span>" +
+                                                  "<span id='" + member1Alias + "'> ,<strong>Team Member 1</strong>: " + member1Alias + "</span></li>");
+
+                     $('#alert').html("Join a Team to join from the Teams Needing A Partner List");
+                }
+
+                 if (teamMembers.length == 2) {
+
+                     removeTeamFromWaitingList(team);
+
+                     let teamMember1 = teamMembers[0];
+                     let member1Alias = teamMember1.Alias;
+                     let teamMember2 = teamMembers[1];
+                     let member2Alias = teamMember2.Alias;
+
+                     $('#teams-online-ul').append("<li id='" + teamId + "'><span id='" + teamName + "'> <strong>Team Name:</strong> " + teamName + "</span>" +
+                                                  "<span id='" + member1Alias + "'> ,<strong>Team Member 1</strong>: " + member1Alias + "</span>" +
+                                                  "<span id='" + member2Alias + "'> ,<strong>Team Member 2</strong>: " + member2Alias + "</span></li>");
+
+                }
+
+            };
+
+            function removeTeamFromWaitingList(team) {
+                teamId = team.TeamId;
+                teamName = team.Name;
+
+                $('#alert').html("At this time there is no opponent team. As soon as one joins the game will begin.");
+                if (teamId.length > 0){
+                    $("ul#team-waiting-ul > li#" + teamId).remove();
+                }
+
+            };
+
+            function removeTeamFromWaitingListById(teamId) {
+
+                $('#alert').html("At this time there is no opponent team. As soon as one joins the game will begin.");
+                if (teamId.length > 0) {
+                    $("ul#team-waiting-ul > li#" + teamId).remove();
+                }
+
+            };
+
+            gameHub.client.buildBoard = function buildBoard(game) {
+
+                let p1 = game.Player1;
+                let p2 = game.Player2;
+                let p3 = game.Player3;
+                let p4 = game.Player4;
+
+                let p1Veiw = [p1, p2, p3, p4];
+                let p2Veiw = [p2, p3, p4, p1];
+                let p3Veiw = [p3, p4, p1, p2];
+                let p4Veiw = [p4, p1, p2, p3];
+
+                let allViews = [p1Veiw, p2Veiw, p3Veiw, p4Veiw];
+
+                /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*SHARED VIEW BETWEEN ALL CLIENTS*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv**/
+
+                let imageUrl = '/Images/backgrounds/red-poker.jpg';
+                $('#board').css({
+                    'background-image': 'url(' + imageUrl + ')',
+                    'background-repeat': 'no-repeat',
+                    'background-size': '100% 100%',
+
+                });
+
+                $('#center-center, #center-top, #center-left, #center-right, #center-bottom').addClass('play-card');
+
+                $('#bottom-left-top-row').append('<input type="text" id="bid" />');
+                $('#bottom-left-center-row').append('<div class="col-md-6"><input type="submit" id="submit-bid" value="Submit Bid" /></div>' +
+                                                    '<div class="col-md-6"><input type="submit" id="pass-bid" value="Pass" /></div>');
+
+                $("#bid").spinner({
+                    min: 50,
+                });
+                $("#bid").on("spin", function (event, ui) {
+                    if (ui.value >= 50 && ui.value <= 59) {
+                        $(this).spinner("option", "step", 1);
+                    }
+                    if (ui.value >= 60 && ui.value <= 95) {
+                        $(this).spinner("option", "step", 5);
+                    }
+                    if (ui.value >= 100) {
+                        $(this).spinner("option", "step", 10);
+
+                    }
+                });
+                $('#bid').spinner('option', 'disabled', true);
+                $('#submit-bid').prop('disabled', true);
+
+                $('#submit-bid').on("click", function () {
+
+                    let bid = $('#bid').spinner("value");
+
+                    gameHub.server.submitBid(bid, game.GameId).done(function () {
+                        //log done
+                    }).fail(function () {
+                        //log fail
+                    });
+
+                });
+
+                $('#pass-bid').on("click", function () {
+
+                    let bid = $('#bid').spinner("value");
+                    let minBid = $('#bid').spinner("option", "min");
+                    let bidOrDefault = bid || minBid;
+
+                    gameHub.server.passBid(bidOrDefault, game.GameId).done(function () {
+                        //log done
+                    }).fail(function () {
+                        //log fail
+                    });
+
+                });
+
+                
+
+                /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^END OF SHARED VIEW BETWEEN ALL CLIENTS^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
+
+
+
+                /****vvvvvvvvvvvvvvvvvvvvvvvv*****ALL INDIVIDUAL PLAYER VIEWS****vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv****/
+
+                allPlayersViews(allViews);
+
+                /***^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^END OF ALL INDIVIDUAL PLAYER VIEWS^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^***/
+            };
+
+            function allPlayersViews(allViews) {
+
+                for (let x = 0; x < allViews.length; x++) {
+
+                    let p = allViews[x];
+
+                    if (p[0].AppUserId === userId) {
+
+                        $('#bottom').html("<span class='text-primary'>Player: " + p[0].Alias + "</span>");
+                        $('#left').html("<span class='text-primary'>Player: " + p[1].Alias + "</span>");
+                        $('#top').html("<span class='text-primary'>Player: " + p[2].Alias + "</span>");
+                        $('#right').html("<span class='text-primary'>Player: " + p[3].Alias + "</span>");
+
+                        $('#bottom').append("<ul id='bottom-ul'></ul>")
+
+                        let p1hand = p[0].PinochleHand.Cards;
+                        for (let i = 0; i < p1hand.length; i++) {
+                            let bottomCardImage = p1hand[i].CardImage;
+                            let suitName = p1hand[i].Suit.Name;
+
+                            $('#bottom-ul').prepend("<li><img id='" + suitName + "' src='" + bottomCardImage + "' height='100' width='78' class='padding'/></li>");
+                            
+                        }
+                        let p2hand = p[1].PinochleHand.Cards;
+                        for (let i = 0; i < p2hand.length; i++) {
+                            let leftCardImage = p2hand[i].CardImage;
+
+                            $('#left').prepend("<img id='' src='" + leftCardImage + "' height='100' width='78' />");
+                        }
+                        let p3hand = p[2].PinochleHand.Cards;
+                        for (let i = 0; i < p3hand.length; i++) {
+                            let topCardImage = p3hand[i].CardImage;
+
+                            $('#top').prepend("<img id='' src='" + topCardImage + "' height='100' width='78' />");
+                        }
+                        let p4hand = p[3].PinochleHand.Cards;
+                        for (let i = 0; i < p4hand.length; i++) {
+                            let rightCardImage = p4hand[i].CardImage;
+
+                            $('#right').prepend("<img id='' src='" + rightCardImage + "' height='100' width='78' />");
+                        }
+                        if (p[3].IsDealer === true) {
+                            $('#bid').spinner('option', 'disabled', false);
+                            $('#submit-bid').prop('disabled', false);
+                        }
+                        for (let i = 0; i < p.length; i++) {
+                            if (p[i].IsDealer === true) {
+                                displayDealer(p[i].Alias);
+                            }
+                        }
+                       
+                    }
+                }
+                /*$('#bottom-ul').children().draggable({
+                    revert: "invalid",
+                    helper: function () {
+                        console.log($(this).find('img').attr('src'));
+                       
+                        return $("<li><img src='" + $(this).find('img').attr('src') + "' height='100' width='78' class='green-box-shadow'></li>");
+                        
+                    }
+                });
+
+                $('#bottom-ul').children().draggable(
+                    "option", "stack", ".ui-draggable");*/
+
+                $('#bottom-ul').sortable({
+                    revert: "invalid",
+                    helper: function () {
+                        console.log($(this));
+                        console.log($(this).find('img').attr('src'));
+
+                        return $("<img src='" + $(this).find('img').attr('src') + "' height='100' width='78' class='green-box-shadow'>");
+
+                    },
+                    /*drop: function (event, ui) {
+                        ui.helper.fadeOut(function () {
+                            ui.helper.remove();
+                        })
+                    }*/
+                });
+            };
+
+            function displayDealer(playerAsDealer) {
+                $('#top-right-center-row').html("<span>Current Dealer: </span><b>" + playerAsDealer + "</b>");
+            };
+
+            gameHub.client.updateCurrentBid = function updateCurrentBid(bid, game, lastToBid) {
+
+                //TODO: find out who bid or passed last, then enable buttons on client to the left of that person and disable everyone else's buttons
+                let gameId = game.GameId;
+                let p1 = game.Player1;
+                let p2 = game.Player2;
+                let p3 = game.Player3;
+                let p4 = game.Player4;
+
+                let p1Veiw = [p1, p2, p3, p4];
+                let p2Veiw = [p2, p3, p4, p1];
+                let p3Veiw = [p3, p4, p1, p2];
+                let p4Veiw = [p4, p1, p2, p3];
+
+                let allViews = [p1Veiw, p2Veiw, p3Veiw, p4Veiw];
+
+                let nextToBid;
+
+                for (let x = 0; x < allViews.length; x++) {
+
+                    let p = allViews[x];
+
+                    if (p[0].AppUserId === lastToBid) {
+                        //Enable
+                        $('#bid').spinner('option', 'disabled', true);
+                        $('#submit-bid').prop('disabled', true);
+
+                        //Updates minimum bid allowed if last player to bid did NOT pass
+                        if (p[0].PassBid === false) {
+                            if (bid >= 50 && bid <= 59) {
+                                let minBid = bid + 1;
+                                $('#bid').spinner("option", "min", minBid);
+                            }
+                            if (bid >= 60 && bid <= 95) {
+                                let minBid = bid + 5;
+                                $('#bid').spinner("option", "min", minBid);
+                            }
+                            if (bid >= 100) {
+                                let minBid = bid + 10;
+                                $('#bid').spinner("option", "min", minBid);
+                            }
+                        }
+                        
+                        /*NEED TO ADD A SWITCH STATEMENT HERE OR JUST RUN TESTS ON THE LOGIC*/
+                        if (p[1].PassBid === false ) {
+                            
+                            if (p[0].PassBid && p[2].PassBid && p[3].PassBid) {
+
+                                BidWinner(p[1], bid, gameId);
+                            }
+                            else {
+
+                                nextToBid = 1;
+                            }
+                        }
+                        else { //if (p[1].PassBid === true)
+
+                            if (p[2].PassBid === false) {
+
+                                if (p[0].PassBid && p[3].PassBid) {
+
+                                    BidWinner(p[2], bid, gameId);
+                                }
+                                else {
+
+                                    nextToBid = 2;
+                                }
+                            }                         
+                            else { //if (p[2].PassBid === true)
+
+                                if (p[3].PassBid === false) {
+
+                                    if (p[0].PassBid) {
+
+                                        BidWinner(p[3], bid, gameId);
+                                    }
+                                    else {
+
+                                        nextToBid = 3;
+                                    }
+                                    
+                                }
+                                else { //if (p[3].PassBid === true)
+
+                                    if (p[0].PassBid === false) {
+                                        
+                                        BidWinner(p[0], bid, gameId);
+                                    }
+                                    else {
+                                        
+                                        let p0 = p[0], p1 = p[1], p2 = p[2], p3 = p[3];
+                                        let dealer = [p0, p1, p2, p3].find(x => x.IsDealer === true); // changed from .find()
+                                        //need to touch the server here to notify all clients that a winner has been determined
+                                        console.log('dealer');
+                                        console.log(dealer);
+                                        BidWinner(dealer, bid, gameId);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (nextToBid <= 3 && nextToBid >= 1) {
+                            if (p[nextToBid].AppUserId === userId) {
+                                $('#bid').spinner('option', 'disabled', false);
+                                $('#submit-bid').prop('disabled', false);
+                            }
+                        }
+                    }
+
+                    $('#top-right-bottom-row').html("<span>Current Bid : " + bid + "</span>");
+                }
+
+            };
+
+            function BidWinner(bidWinner, bid, gameId) {
+                console.log(bidWinner.Alias + " is the Bid Winner!!");
+                if (bidWinner.AppUserId === userId) {
+                    
+                    $('#center-center').append('<div id="declare-trump"></div>');
+                    $('#declare-trump').dialog({
+                        autoOpen: true,
+                        title: bidWinner.Alias + ' Wins with a Bid of: ' + bid + ' Declare Trump Suit',
+                        width: 484,
+                        buttons: [{
+                                    text: 'Clubs',
+                                    open: function () { $(this).addClass('clubs-image') }, 
+                                    click: function () {
+                                        SubmitSuit("clubs", gameId);
+                                        $(this).dialog("close");
+                                    }
+                                },{
+                                    text: "Diamonds",
+                                    open: function () { $(this).addClass('diamonds-image') },
+                                    click: function () {
+                                        SubmitSuit("diamonds", gameId);
+                                        $(this).dialog("close");
+                                    }
+                                }, {
+                                    text: "Hearts",
+                                    open: function () { $(this).addClass('hearts-image') },
+                                    click: function () { 
+                                        SubmitSuit("hearts", gameId);
+                                        $(this).dialog("close");
+                                    }
+                                }, {
+                                    text: "Spades",
+                                    open: function () { $(this).addClass('spades-image') },
+                                    click: function () {
+                                        SubmitSuit("spades", gameId);
+                                        $(this).dialog("close");
+                                    }
+                                }]
+                    });
+
+                    $('.ui-dialog-titlebar').children('button').remove();
+
+                    let buttons = $('.ui-dialog-buttonpane').children('button');
+                    buttons.removeClass('ui-button-text-only');
+
+
+                }
+            };
+            function SubmitSuit(suit, gameId) {
+
+                gameHub.server.declareTrumpSuit(suit, gameId).done(function () {
+
+                }).fail(function () {
+
+                });
+            }
+
+            gameHub.client.evaluateMeld = function evaluateMeld(suit, game){
+                console.log(suit);
+                $("img[id*='" + suit.Name + "']").each(function () {
+                    $(this).addClass('gold-box-shadow');
+                });
+
+                console.log(game.Player1.MeldScore);
+                console.log(game.Player2.MeldScore);
+                console.log(game.Player3.MeldScore);
+                console.log(game.Player4.MeldScore);
+            }
+
+            $('#center').droppable({
+                tolerance: "touch",
+                drop: function (event, ui) {
+                    console.log("UI Draggable: ");
+                    console.log(ui.draggable);
+                    console.log("UI Helper: ");
+                    console.log(ui.helper);
+                    console.log("UI Position: ");
+                    console.log(ui.position);
+                    console.log("UI OffSet: ");
+                    console.log(ui.offset);
+                }
+            });
+
+            $('#center').on('drop', function (event, ui) {
+                console.log("on drop ui Draggable: ");
+                console.log(ui.draggable);
+                console.log("on drop ui helper: ");
+                console.log(ui.helper);
+                console.log("on drop ui position: ");
+                console.log(ui.position);
+                console.log("on drop ui offset: ");              
+                console.log(ui.offset);
+
+                Object.keys(ui.draggable).forEach(key => {
+                    let value = ui.draggable[key];
+                        console.log("key: " + key + ", value: " + value);
+                    });
+
+            });
+
+        });
+    </script>
+}
+
+
