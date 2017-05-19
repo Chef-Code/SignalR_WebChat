@@ -30,11 +30,7 @@ namespace SignalR_WebChat.Models.DataModels
         public bool HasTeam { get; set; }
         public bool PassBid { get; set; }
         public bool IsDealer { get; set; }
-        public PinochleHand PinochleHand
-        {
-            get { return hand; }
-            set { hand = value; }
-        }
+        public PinochleHand PinochleHand { get; set; }
         public int Bid { get; set; }        
         public void SetBid(int Bid)
         {
@@ -45,7 +41,7 @@ namespace SignalR_WebChat.Models.DataModels
         #region Methods
         public void DeclareTrumpSuit(Suit TrumpSuit)
         {
-            hand.TrumpSuit = TrumpSuit;
+            PinochleHand.TrumpSuit = TrumpSuit;
         }
         #endregion
     }
