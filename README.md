@@ -1,2 +1,2 @@
 # SignalR_WebChat
-[Main View](tree/master/SignalR_WebChat/Views/Game)
+[Main View](Views/Game)
