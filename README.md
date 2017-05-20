@@ -1,2 +1,2 @@
 # SignalR_WebChat
-[Main View](Views/Game)
+[Main View](SignalR_WebChat)
