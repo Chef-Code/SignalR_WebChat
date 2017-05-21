@@ -165,7 +165,94 @@ namespace SignalR_WebChat.Models.DataModels
                     return new List<Card>();
             }
         }
-
+        public List<Card> KingOfClubs
+        {
+            get
+            {
+                var kingOfClubs = HandInQuestion.Cards.Where(c => c.Suit.Name == "clubs" && c.IsKing()).ToList();
+                if (kingOfClubs != null)
+                    return kingOfClubs;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> KingOfDiamonds
+        {
+            get
+            {
+                var kingOfDiamonds = HandInQuestion.Cards.Where(c => c.Suit.Name == "diamonds" && c.IsKing()).ToList();
+                if (kingOfDiamonds != null)
+                    return kingOfDiamonds;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> KingOfHearts
+        {
+            get
+            {
+                var kingOfHearts = HandInQuestion.Cards.Where(c => c.Suit.Name == "hearts" && c.IsKing()).ToList();
+                if (kingOfHearts != null)
+                    return kingOfHearts;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> KingOfSpades
+        {
+            get
+            {
+                var kingOfSpades = HandInQuestion.Cards.Where(c => c.Suit.Name == "spades" && c.IsKing()).ToList();
+                if (kingOfSpades != null)
+                    return kingOfSpades;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> QueenOfClubs
+        {
+            get
+            {
+                var queenOfClubs = HandInQuestion.Cards.Where(c => c.Suit.Name == "clubs" && c.IsQueen()).ToList();
+                if (queenOfClubs != null)
+                    return queenOfClubs;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> QueenOfDiamonds
+        {
+            get
+            {
+                var queenOfDiamonds = HandInQuestion.Cards.Where(c => c.Suit.Name == "diamonds" && c.IsQueen()).ToList();
+                if (queenOfDiamonds != null)
+                    return queenOfDiamonds;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> QueenOfHearts
+        {
+            get
+            {
+                var queenOfHearts = HandInQuestion.Cards.Where(c => c.Suit.Name == "hearts" && c.IsQueen()).ToList();
+                if (queenOfHearts != null)
+                    return queenOfHearts;
+                else
+                    return new List<Card>();
+            }
+        }
+        public List<Card> QueenOfSpades
+        {
+            get
+            {
+                var queenOfSpades = HandInQuestion.Cards.Where(c => c.Suit.Name == "spades" && c.IsQueen()).ToList();
+                if (queenOfSpades != null)
+                    return queenOfSpades;
+                else
+                    return new List<Card>();
+            }
+        }
         public List<Card> NonTrumpKings
         {
             get
@@ -347,6 +434,29 @@ namespace SignalR_WebChat.Models.DataModels
             }
 
             return royalMarriages;
+        }
+        public List<Suit> RoyalMarriageSuits()
+        {
+            var suits = new List<Suit>();
+
+            if(KingOfClubs.Count > 0 && QueenOfClubs.Count > 0)
+            {
+                suits.Add(new Clubs());
+            }
+            if (KingOfDiamonds.Count > 0 && QueenOfDiamonds.Count > 0)
+            {
+                suits.Add(new Diamonds());
+            }
+            if (KingOfHearts.Count > 0 && QueenOfHearts.Count > 0)
+            {
+                suits.Add(new Hearts());
+            }
+            if (KingOfSpades.Count > 0 && QueenOfSpades.Count > 0)
+            {
+                suits.Add(new Spades());
+            }
+
+            return suits;
         }
 
         public int Marriages() //Marriage: Kings and Queen of the SAME suit, *NOT trumps*

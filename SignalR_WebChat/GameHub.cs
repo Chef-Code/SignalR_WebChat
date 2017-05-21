@@ -317,20 +317,32 @@ namespace SignalR_WebChat
                 {
                     var suit = GameState.Instance.GetSuit(nameOfSuit);
 
-                    var p1 = game.Player1;
-                    var p2 = game.Player2;
-                    var p3 = game.Player3;
-                    var p4 = game.Player4;
-                    var allPlayers = new List<AppUser>() { p1, p2, p3, p4 };
+                    var royalMarriageSuits = new Meld(player.PinochleHand).RoyalMarriageSuits();
 
-                    foreach(var p in allPlayers)
+                    var canPlay = royalMarriageSuits.Any(rms => rms.Name == suit.Name);
+
+                    if(canPlay)
                     {
-                        p.DeclareTrumpSuit(suit);
-                        p.MeldScore = new Meld(p.PinochleHand).GetScore();
-                    }
+                        var p1 = game.Player1;
+                        var p2 = game.Player2;
+                        var p3 = game.Player3;
+                        var p4 = game.Player4;
+                        var allPlayers = new List<AppUser>() { p1, p2, p3, p4 };
 
-                    Clients.Group(gameId).evaluateMeld(suit, game);
-                    return true;
+                        foreach (var p in allPlayers)
+                        {
+                            p.DeclareTrumpSuit(suit);
+                            p.MeldScore = new Meld(p.PinochleHand).GetScore();
+                        }
+
+                        Clients.Group(gameId).evaluateMeld(suit, game);
+                        return true;
+                    }
+                    else
+                    {
+                        //TODO: write a client method that automatically `Sets` the `player` because they tried to play a suit they did not have a marriage in
+                    }
+ 
                 }
             }           
             return false;

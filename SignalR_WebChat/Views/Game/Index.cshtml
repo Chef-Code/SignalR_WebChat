@@ -16,41 +16,30 @@
     <div class="col-md-4"></div><div class="col-md-4" id="bottom"></div><div class="col-md-4"></div>
 </div>
 
-@section scripts{ 
+@section scripts{
+
+    <script src="~/Scripts/jquery.signalR-2.2.1.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/jquery.spin.js"></script>
+
     <script type="text/javascript">
+        var gameHub;
 
-        (function () {
-            var players = [1, 2, 3, 4];
+        $(function () {
 
-            var player = 3;
+            gameHub = $.connection.gameHub;
 
-            if (player == 1) {
-                $('#bottom').html("<span class='red'>Player: " + players[0] + "</span>");
-                $('#left').html("<span class='red'>Player: " + players[1] + "</span>");
-                $('#top').html("<span class='red'>Player: " + players[2] + "</span>");
-                $('#right').html("<span class='red'>Player: " + players[3] + "</span>");
-            }
+            $.connection.hub.logging = true;
 
-            if (player == 2) {
-                $('#bottom').html("<span class='red'>Player: " + players[1] + "</span>");
-                $('#left').html("<span class='red'>Player: " + players[2] + "</span>");
-                $('#top').html("<span class='red'>Player: " + players[3] + "</span>");
-                $('#right').html("<span class='red'>Player: " + players[0] + "</span>");
-            }
+            $.connection.hub.error(function (error) {
+                console.log('SignalR error: ' + error)
+            });
 
-            if (player == 3) {
-                $('#bottom').html("<span class='red'>Player: " + players[2] + "</span>");
-                $('#left').html("<span class='red'>Player: " + players[3] + "</span>");
-                $('#top').html("<span class='red'>Player: " + players[0] + "</span>");
-                $('#right').html("<span class='red'>Player: " + players[1] + "</span>");
-            }
+            $.connection.hub.start().done(function () {
 
-            if (player == 4) {
-                $('#bottom').html("<span class='red'>Player: " + players[3] + "</span>");
-                $('#left').html("<span class='red'>Player: " + players[0] + "</span>");
-                $('#top').html("<span class='red'>Player: " + players[1] + "</span>");
-                $('#right').html("<span class='red'>Player: " + players[2] + "</span>");
-            }
+            }).fail(function () {
+                console.log("Hub start failed")
+            });
 
         })();
 
