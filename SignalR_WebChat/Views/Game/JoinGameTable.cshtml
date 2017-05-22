@@ -420,6 +420,9 @@ th, td {
 
             gameHub.client.buildBoard = function buildBoard(game) {
 
+                let t1 = game.Team1;
+                let t2 = game.Team2;
+
                 let p1 = game.Player1;
                 let p2 = game.Player2;
                 let p3 = game.Player3;
@@ -434,22 +437,34 @@ th, td {
 
                 /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*SHARED VIEW BETWEEN ALL CLIENTS*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv**/
 
+
                 let $table = $("<table></table");
                 let $thead = $("<thead></thead>");
                 let $tbody = $("<tbody></tbody>");
 
                 let $theadrow = $("<tr><th></th><th> Bid </th><th> Meld </th><th> Trick Points </th><th> Score </th></tr>");
                     
-                let $team1row = $("<tr id='team1row'><th id='team1'></th><td id='team1bid'></td><td id='team1meld'></td><td id='team1trick'></td><td id='team1score'></td></tr>"); 
-                let $team1player1row = $("<tr id='team1player1row'><th id='team1player1'></th><td id='team1player1bid'></td><td id='team1player1meld'></td><td id='team1player1trick'></td><td id='team1player1score'></td></tr>");
-                let $team1player2row = $("<tr id='team1player2row'><th id='team1player2'></th><td id='team1player2bid'></td><td id='team1player2meld'></td><td id='team1player2trick'></td><td id='team1player2score'></td></tr>");
-                let $team2row = $("<tr id='team2row'><th id='team2'></th><td id='team2bid'></td><td id='team2meld'></td><td id='team2trick'></td><td id='team2score'></td></tr>");
-                let $team2player1row = $("<tr id='team2player1row'><th id='team2player1'></th><td id='team2player1bid'></td><td id='team2player1meld'></td><td id='team2player1trick'></td><td id='team2player1score'></td></tr>");
-                let $team2player2row = $("<tr id='team2player2row'><th id='team2player2'></th><td id='team2player2bid'></td><td id='team2player2meld'></td><td id='team2player2trick'></td><td id='team2player2score'></td></tr>");
+                let $team1row = $("<tr id='team1row'><th id='team1'>" + t1.Name + "</th><td id='team1bid'></td><td id='team1meld'></td><td id='team1trick'></td><td id='team1score'></td></tr>"); 
+                let $team1player1row = $("<tr id='team1player1row'><th id='team1player1'>" + p1.Alias + "</th><td id='team1player1bid'></td><td id='team1player1meld'></td><td id='team1player1trick'></td><td id='team1player1score'></td></tr>");
+                let $team1player2row = $("<tr id='team1player2row'><th id='team1player2'>" + p3.Alias + "</th><td id='team1player2bid'></td><td id='team1player2meld'></td><td id='team1player2trick'></td><td id='team1player2score'></td></tr>");
+                let $team2row = $("<tr id='team2row'><th id='team2'>" + t2.Name + "</th><td id='team2bid'></td><td id='team2meld'></td><td id='team2trick'></td><td id='team2score'></td></tr>");
+                let $team2player1row = $("<tr id='team2player1row'><th id='team2player1'>" + p2.Alias + "</th><td id='team2player1bid'></td><td id='team2player1meld'></td><td id='team2player1trick'></td><td id='team2player1score'></td></tr>");
+                let $team2player2row = $("<tr id='team2player2row'><th id='team2player2'>" + p4.Alias + "</th><td id='team2player2bid'></td><td id='team2player2meld'></td><td id='team2player2trick'></td><td id='team2player2score'></td></tr>");
 
+                let alltbodyrows = [$team1row, $team1player1row, $team1player2row, $team2row, $team2player1row, $team2player2row];
+
+                alltbodyrows.forEach(addToTBody);
+
+                function addToTBody(item) {
+                    $tbody.append(item);
+                };
+                $thead.append($theadrow);
+
+                $table.append($thead);
+                $table.append($tbody);
 
  
-                $('#top-right-bottom-row').append()
+                $('#top-right-bottom-row').append($table);
 
                 let imageUrl = '/Images/backgrounds/black-steel-plate.jpg';
                 $('#board').css({
