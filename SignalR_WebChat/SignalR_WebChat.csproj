@@ -289,7 +289,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\backgrounds\black-brick.jpg" />
+    <Content Include="Images\backgrounds\black-steel-plate.jpg" />
+    <Content Include="Images\backgrounds\green-hexagon.jpg" />
+    <Content Include="Images\backgrounds\green-poker.jpg" />
     <Content Include="Images\backgrounds\red-poker.jpg" />
+    <Content Include="Images\backgrounds\wood-grain.jpeg" />
     <Content Include="Images\clubs_suit.jpg" />
     <Content Include="Images\diamonds_suit.jpg" />
     <Content Include="Images\hearts_suit.jpg" />
