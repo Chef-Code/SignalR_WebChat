@@ -81,7 +81,7 @@
 #top-right-top-row{
     min-height:150px;
 }
-#top-right-center-row, #top-right-bottom-row {
+#top-right-top-row, #top-right-center-row {
     background-color: whitesmoke;
 }
 .clubs-image{
@@ -420,6 +420,15 @@
 
                 /*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv*SHARED VIEW BETWEEN ALL CLIENTS*vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv**/
 
+                /*let $table = $("<table></table");
+
+                for (let i = 0; i > p1View.length; i++) {
+                    $()
+                }
+
+ 
+                $('#top-right-bottom-row').append()*/
+
                 let imageUrl = '/Images/backgrounds/red-poker.jpg';
                 $('#board').css({
                     'background-image': 'url(' + imageUrl + ')',
@@ -564,7 +573,7 @@
                         console.log($(this));
                         console.log($(this).find('img').attr('src'));
 
-                        return $("<img src='" + $(this).find('img').attr('src') + "' height='100' width='78' class='green-box-shadow'>");
+                        return $("<li><img src='" + $(this).find('img').attr('src') + "' height='100' width='78' class='green-box-shadow'></li>");
 
                     },
                     /*drop: function (event, ui) {
@@ -576,7 +585,7 @@
             };
 
             function displayDealer(playerAsDealer) {
-                $('#top-right-center-row').html("<span>Current Dealer: </span><b>" + playerAsDealer + "</b>");
+                $('#top-right-top-row').html("<span>Current Dealer: </span><b>" + playerAsDealer + "</b>");
             };
 
             gameHub.client.updateCurrentBid = function updateCurrentBid(bid, game, lastToBid) {
@@ -688,7 +697,7 @@
                         }
                     }
 
-                    $('#top-right-bottom-row').html("<span>Current Bid : " + bid + "</span>");
+                    $('#top-right-center-row').html("<span>Current Bid : " + bid + "</span>");
                 }
 
             };
@@ -748,9 +757,9 @@
                 }).fail(function () {
 
                 });
-            }
+            };
 
-            gameHub.client.evaluateMeld = function evaluateMeld(suit, game){
+            gameHub.client.evaluateMeld = function evaluateMeld(suit, game) {
                 console.log(suit);
                 $("img[id*='" + suit.Name + "']").each(function () {
                     $(this).addClass('gold-box-shadow');
@@ -760,8 +769,11 @@
                 console.log(game.Player2.MeldScore);
                 console.log(game.Player3.MeldScore);
                 console.log(game.Player4.MeldScore);
-            }
+            };
 
+            gameHub.client.setPlayer = function setPlayer(game) {
+
+            };
             $('#center').droppable({
                 tolerance: "touch",
                 drop: function (event, ui) {

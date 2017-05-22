@@ -7,8 +7,6 @@ namespace SignalR_WebChat.Models.DataModels
 {
     public class AppUser
     {
-        private PinochleHand hand;
-
         public AppUser()
         {
             PinochleHand = new PinochleHand();
@@ -38,10 +36,20 @@ namespace SignalR_WebChat.Models.DataModels
         }     
         public List<int> Matches { get; set; }
         public int MeldScore { get; set; }
+        public List<Trick> TricksTaken { get; set; }
         #region Methods
         public void DeclareTrumpSuit(Suit TrumpSuit)
         {
             PinochleHand.TrumpSuit = TrumpSuit;
+        }
+        public int PointersTaken()
+        {
+            var pointersTaken = 0;
+            foreach(var trick in TricksTaken)
+            {
+                pointersTaken += trick.TrickValue;
+            }
+            return pointersTaken;
         }
         #endregion
     }

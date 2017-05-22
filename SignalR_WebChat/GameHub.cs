@@ -341,6 +341,7 @@ namespace SignalR_WebChat
                     else
                     {
                         //TODO: write a client method that automatically `Sets` the `player` because they tried to play a suit they did not have a marriage in
+                        Clients.Group(gameId).setPlayer(game);
                     }
  
                 }
