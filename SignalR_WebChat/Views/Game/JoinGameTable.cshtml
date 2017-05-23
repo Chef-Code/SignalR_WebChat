@@ -142,6 +142,12 @@ table {
 th, td {
     padding: 15px;
 }
+th {
+    color:yellow;
+}
+td {
+    color:white;
+}
 </style>       
 <!-- http://thewebthought.blogspot.com/2013/04/css-rotate-background-images.html -->
 
@@ -742,7 +748,18 @@ th, td {
             function BidWinner(bidWinner, bid, gameId) {
                 console.log(bidWinner.Alias + " is the Bid Winner!!");
                 if (bidWinner.AppUserId === userId) {
+
+                    let minBid = $('#bid').spinner("option", "min");
+
+                    if (bidWinner.Bid === 0) {
+                        gameHub.server.setMinBid(minBid).done(function () {
+
+                        }).fail(function () {
+
+                        });
+                    }
                     
+
                     $('#center-center').append('<div id="declare-trump"></div>');
                     $('#declare-trump').dialog({
                         autoOpen: true,
@@ -796,21 +813,77 @@ th, td {
                 });
             };
 
-            gameHub.client.evaluateMeld = function evaluateMeld(suit, game) {
+            gameHub.client.evaluateMeld = function evaluateMeld(suit, game, player) {
                 console.log(suit);
                 $("img[id*='" + suit.Name + "']").each(function () {
                     $(this).addClass('gold-box-shadow');
                 });
 
-                console.log(game.Player1.MeldScore);
-                console.log(game.Player2.MeldScore);
-                console.log(game.Player3.MeldScore);
-                console.log(game.Player4.MeldScore);
+                let p1 = game.Player1;
+                let p2 = game.Player2;
+                let p3 = game.Player3;
+                let p4 = game.Player4;
+
+                if (player.AppUserId === p1.AppUserId) {
+                    //team1player1
+                    $('#team1player1bid').html(player.Bid);
+                    //startTrickPlay()
+                }
+                if (player.AppUserId === p2.AppUserId) {
+                    //team2player1
+                    $('#team2player1bid').html(player.Bid);
+                }
+                if (player.AppUserId === p3.AppUserId) {
+                    //team1player2
+                    $('#team1player2bid').html(player.Bid);
+                }
+                if (player.AppUserId === p4.AppUserId) {
+                    //team2player2
+                    $('#team2player2bid').html(player.Bid);
+                }
+
+                $('#team1player1meld').html(p1.MeldScore);
+                $('#team2player1meld').html(p2.MeldScore);
+                $('#team1player2meld').html(p3.MeldScore);
+                $('#team2player2meld').html(p4.MeldScore);
             };
 
-            gameHub.client.setPlayer = function setPlayer(game) {
+            gameHub.client.setPlayer = function setPlayer(game, player) {
+
+                let p1 = game.Player1;
+                let p2 = game.Player2;
+                let p3 = game.Player3;
+                let p4 = game.Player4;
+
+                let negitiveBid = 0;
+
+                if (player.AppUserId === p1.AppUserId) {
+                    //team1player1
+                    negitiveBid = 0 - p1.Bid;
+                    $('#team1player1bid').html(p1.Bid);
+                    $('#team1player1score').html(negitiveBid);
+                }
+                if (player.AppUserId === p2.AppUserId) {
+                    //team2player1
+                    negitiveBid = 0 - p2.Bid;
+                    $('#team2player1bid').html(p2.Bid);
+                    $('#team2player1score').html(negitiveBid);
+                }
+                if (player.AppUserId === p3.AppUserId) {
+                    //team1player2
+                    negitiveBid = 0 - p3.Bid;
+                    $('#team1player2bid').html(p3.Bid);
+                    $('#team1player2score').html(negitiveBid);
+                }
+                if (player.AppUserId === p4.AppUserId) {
+                    //team2player2
+                    negitiveBid = 0 - p4.Bid;
+                    $('#team2player2bid').html(p4.Bid);
+                    $('#team2player2score').html(negitiveBid);
+                }
 
             };
+
             $('#center').droppable({
                 tolerance: "touch",
                 drop: function (event, ui) {

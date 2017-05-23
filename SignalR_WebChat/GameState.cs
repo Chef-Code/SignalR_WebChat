@@ -120,6 +120,25 @@ namespace SignalR_WebChat
             var teamFound = _teams.Values.FirstOrDefault(t => t.TeamId == teamId);
             return teamFound;
         }
+        public AppUser FindTeamMemberByMember(AppUser appUser)
+        {
+            AppUser teamMember;
+            var team = _teams.Values.FirstOrDefault(t => t.Members[0].AppUserId == appUser.AppUserId || t.Members[1].AppUserId == appUser.AppUserId);
+            if (team.Members.Count > 1)
+            {
+                if (team.Members[0].AppUserId == appUser.AppUserId)
+                {
+                    teamMember = team.Members[1];
+                }
+                else
+                {
+                    teamMember = team.Members[0];
+                }
+                return teamMember;
+            }
+            else
+                return null;
+        }
         public List<Team> GetAllSingleMemberTeams()
         {
             var singleMemberTeams = _teams.Values.Where(t => t.Members.Count == 1).ToList();

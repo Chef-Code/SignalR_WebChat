@@ -306,6 +306,17 @@ namespace SignalR_WebChat
             }
             return false;
         }
+        public bool SetMinBid(int bid)
+        {
+            var userAlias = Clients.Caller.alias;
+            var player = GameState.Instance.GetPlayer(userAlias);  //TODO: rewrite this method, it does not need to check for all these Game Instances
+            if (player != null)
+            {
+                player.Bid = bid;
+                return true;
+            }
+            return false;
+        }
         public bool DeclareTrumpSuit(string nameOfSuit, string gameId)
         {
             var userAlias = Clients.Caller.alias;
@@ -321,27 +332,31 @@ namespace SignalR_WebChat
 
                     var canPlay = royalMarriageSuits.Any(rms => rms.Name == suit.Name);
 
-                    if(canPlay)
-                    {
-                        var p1 = game.Player1;
-                        var p2 = game.Player2;
-                        var p3 = game.Player3;
-                        var p4 = game.Player4;
-                        var allPlayers = new List<AppUser>() { p1, p2, p3, p4 };
+                    var p1 = game.Player1;
+                    var p2 = game.Player2;
+                    var p3 = game.Player3;
+                    var p4 = game.Player4;
+                    var allPlayers = new List<AppUser>() { p1, p2, p3, p4 };
 
+                    if (canPlay)
+                    {
                         foreach (var p in allPlayers)
                         {
                             p.DeclareTrumpSuit(suit);
                             p.MeldScore = new Meld(p.PinochleHand).GetScore();
                         }
 
-                        Clients.Group(gameId).evaluateMeld(suit, game);
+                        Clients.Group(gameId).evaluateMeld(suit, game, player);
                         return true;
                     }
                     else
                     {
                         //TODO: write a client method that automatically `Sets` the `player` because they tried to play a suit they did not have a marriage in
-                        Clients.Group(gameId).setPlayer(game);
+                        var playerTeamMate = GameState.Instance.FindTeamMemberByMember(player);
+                        var playerBid = player.Bid;
+
+                        Clients.Group(gameId).setPlayer(game, player);
+                        return true;
                     }
  
                 }
